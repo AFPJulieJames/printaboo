@@ -1,0 +1,6 @@
+name = "printaboo-image-proxy"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# After deploy, set your secret (do NOT put keys in this file):
+#   npx wrangler secret put FAL_KEY
