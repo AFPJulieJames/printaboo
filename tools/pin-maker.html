@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Printaboo — Pinterest Pin Maker</title>
+<style>
+:root{--brand:#ff7a59;--brand2:#7c5cff;--ink:#2b2038;--muted:#8a7f96;--line:#ece3f2;--bg:#fff7ef}
+*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;color:var(--ink);
+background:radial-gradient(1200px 600px at 80% -10%,#ffe9de,transparent 60%),radial-gradient(1000px 500px at -10% 10%,#efe7ff,transparent 55%),var(--bg)}
+header{max-width:1180px;margin:0 auto;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px}
+.logo .dot{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:20px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,button{font-family:inherit;font-size:13.5px;border-radius:10px;border:1px solid var(--line);padding:9px 12px;background:#fff;font-weight:700;color:var(--ink);cursor:pointer}
+button.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border:0}
+.wrap{max-width:1180px;margin:0 auto;padding:6px 20px 60px}
+.hint{color:var(--muted);font-size:13px;margin:2px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.pincard{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(80,50,120,.08)}
+.pincard canvas{width:100%;display:block;background:#eee}
+.pincard .bar{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;font-size:12px;font-weight:700}
+.pincard .bar a{color:var(--brand2);text-decoration:none;cursor:pointer}
+.styleseg{display:flex;gap:6px}
+.styleseg .opt{padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;font-weight:700;background:#fff;cursor:pointer;color:#5b4a7a}
+.styleseg .opt.active{background:var(--brand2);color:#fff;border-color:transparent}
+</style></head>
+<body>
+<header>
+  <div class="logo"><span class="dot">🖍️</span> Printaboo · Pinterest Pin Maker</div>
+  <div class="controls">
+    <div class="styleseg" id="styleseg">
+      <div class="opt active" data-s="0" onclick="setStyle(0)">Sunburst</div>
+      <div class="opt" data-s="1" onclick="setStyle(1)">Sky</div>
+      <div class="opt" data-s="2" onclick="setStyle(2)">Mint</div>
+    </div>
+    <button class="primary" onclick="downloadAll()">⬇️ Download all 50 pins</button>
+  </div>
+</header>
+<div class="wrap">
+  <div class="hint">On-brand 1000×1500 Pinterest pins for every theme. Pick a color style, then download one — or all — as PNGs. Each pin's description (with hashtags) is copyable below it. Post 3–5 variations per theme and link each pin to that theme's page.</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+var THEMES=[{"name":"Dinosaur","emoji":"🦕","slug":"dinosaur","cat":"Animals","pin":"Free Dinosaur Coloring Pages (Printable!)"},{"name":"Unicorn","emoji":"🦄","slug":"unicorn","cat":"Animals","pin":"Free Unicorn Coloring Pages (Printable!)"},{"name":"Cat","emoji":"🐱","slug":"cat","cat":"Animals","pin":"Free Cat Coloring Pages (Printable!)"},{"name":"Dog","emoji":"🐶","slug":"dog","cat":"Animals","pin":"Free Dog Coloring Pages (Printable!)"},{"name":"Horse","emoji":"🐴","slug":"horse","cat":"Animals","pin":"Free Horse Coloring Pages (Printable!)"},{"name":"Butterfly","emoji":"🦋","slug":"butterfly","cat":"Animals","pin":"Free Butterfly Coloring Pages (Printable!)"},{"name":"Lion","emoji":"🦁","slug":"lion","cat":"Animals","pin":"Free Lion Coloring Pages (Printable!)"},{"name":"Elephant","emoji":"🐘","slug":"elephant","cat":"Animals","pin":"Free Elephant Coloring Pages (Printable!)"},{"name":"Owl","emoji":"🦉","slug":"owl","cat":"Animals","pin":"Free Owl Coloring Pages (Printable!)"},{"name":"Fox","emoji":"🦊","slug":"fox","cat":"Animals","pin":"Free Fox Coloring Pages (Printable!)"},{"name":"Penguin","emoji":"🐧","slug":"penguin","cat":"Animals","pin":"Free Penguin Coloring Pages (Printable!)"},{"name":"Bunny","emoji":"🐰","slug":"bunny","cat":"Animals","pin":"Free Bunny Coloring Pages (Printable!)"},{"name":"Ocean Animals","emoji":"🌊","slug":"ocean-animals","cat":"Ocean","pin":"Free Ocean Animals Coloring Pages (Printable!)"},{"name":"Mermaid","emoji":"🧜‍♀️","slug":"mermaid","cat":"Ocean","pin":"Free Mermaid Coloring Pages (Printable!)"},{"name":"Shark","emoji":"🦈","slug":"shark","cat":"Ocean","pin":"Free Shark Coloring Pages (Printable!)"},{"name":"Dolphin","emoji":"🐬","slug":"dolphin","cat":"Ocean","pin":"Free Dolphin Coloring Pages (Printable!)"},{"name":"Sea Turtle","emoji":"🐢","slug":"sea-turtle","cat":"Ocean","pin":"Free Sea Turtle Coloring Pages (Printable!)"},{"name":"Rocket","emoji":"🚀","slug":"rocket","cat":"Space","pin":"Free Rocket Coloring Pages (Printable!)"},{"name":"Planets","emoji":"🪐","slug":"planets","cat":"Space","pin":"Free Planets Coloring Pages (Printable!)"},{"name":"Astronaut","emoji":"👨‍🚀","slug":"astronaut","cat":"Space","pin":"Free Astronaut Coloring Pages (Printable!)"},{"name":"Solar System","emoji":"☀️","slug":"solar-system","cat":"Space","pin":"Free Solar System Coloring Pages (Printable!)"},{"name":"Fire Truck","emoji":"🚒","slug":"fire-truck","cat":"Vehicles","pin":"Free Fire Truck Coloring Pages (Printable!)"},{"name":"Monster Truck","emoji":"🛻","slug":"monster-truck","cat":"Vehicles","pin":"Free Monster Truck Coloring Pages (Printable!)"},{"name":"Train","emoji":"🚂","slug":"train","cat":"Vehicles","pin":"Free Train Coloring Pages (Printable!)"},{"name":"Airplane","emoji":"✈️","slug":"airplane","cat":"Vehicles","pin":"Free Airplane Coloring Pages (Printable!)"},{"name":"Excavator","emoji":"🚜","slug":"excavator","cat":"Vehicles","pin":"Free Excavator Coloring Pages (Printable!)"},{"name":"Tractor","emoji":"🚜","slug":"tractor","cat":"Vehicles","pin":"Free Tractor Coloring Pages (Printable!)"},{"name":"Princess","emoji":"👸","slug":"princess","cat":"Fantasy","pin":"Free Princess Coloring Pages (Printable!)"},{"name":"Dragon","emoji":"🐉","slug":"dragon","cat":"Fantasy","pin":"Free Dragon Coloring Pages (Printable!)"},{"name":"Fairy","emoji":"🧚","slug":"fairy","cat":"Fantasy","pin":"Free Fairy Coloring Pages (Printable!)"},{"name":"Castle","emoji":"🏰","slug":"castle","cat":"Fantasy","pin":"Free Castle Coloring Pages (Printable!)"},{"name":"Superhero","emoji":"🦸","slug":"superhero","cat":"Fantasy","pin":"Free Superhero Coloring Pages (Printable!)"},{"name":"Flower","emoji":"🌸","slug":"flower","cat":"Nature","pin":"Free Flower Coloring Pages (Printable!)"},{"name":"Rainbow","emoji":"🌈","slug":"rainbow","cat":"Nature","pin":"Free Rainbow Coloring Pages (Printable!)"},{"name":"Sunflower","emoji":"🌻","slug":"sunflower","cat":"Nature","pin":"Free Sunflower Coloring Pages (Printable!)"},{"name":"Tree","emoji":"🌳","slug":"tree","cat":"Nature","pin":"Free Tree Coloring Pages (Printable!)"},{"name":"Ice Cream","emoji":"🍦","slug":"ice-cream","cat":"Food","pin":"Free Ice Cream Coloring Pages (Printable!)"},{"name":"Cupcake","emoji":"🧁","slug":"cupcake","cat":"Food","pin":"Free Cupcake Coloring Pages (Printable!)"},{"name":"Pizza","emoji":"🍕","slug":"pizza","cat":"Food","pin":"Free Pizza Coloring Pages (Printable!)"},{"name":"Donut","emoji":"🍩","slug":"donut","cat":"Food","pin":"Free Donut Coloring Pages (Printable!)"},{"name":"Christmas","emoji":"🎄","slug":"christmas","cat":"Holiday","pin":"Free Christmas Coloring Pages (Printable!)"},{"name":"Halloween","emoji":"🎃","slug":"halloween","cat":"Holiday","pin":"Free Halloween Coloring Pages (Printable!)"},{"name":"Easter","emoji":"🐣","slug":"easter","cat":"Holiday","pin":"Free Easter Coloring Pages (Printable!)"},{"name":"Thanksgiving Turkey","emoji":"🦃","slug":"thanksgiving-turkey","cat":"Holiday","pin":"Free Thanksgiving Turkey Coloring Pages (Printable!)"},{"name":"Valentine Heart","emoji":"❤️","slug":"valentine-heart","cat":"Holiday","pin":"Free Valentine Heart Coloring Pages (Printable!)"},{"name":"Pumpkin","emoji":"🎃","slug":"pumpkin","cat":"Holiday","pin":"Free Pumpkin Coloring Pages (Printable!)"},{"name":"Snowman","emoji":"⛄","slug":"snowman","cat":"Holiday","pin":"Free Snowman Coloring Pages (Printable!)"},{"name":"Alphabet Letters","emoji":"🔤","slug":"alphabet-letters","cat":"Learning","pin":"Free Alphabet Letters Coloring Pages (Printable!)"},{"name":"Numbers 1-10","emoji":"🔢","slug":"numbers-1-10","cat":"Learning","pin":"Free Numbers 1-10 Coloring Pages (Printable!)"},{"name":"Shapes","emoji":"🔷","slug":"shapes","cat":"Learning","pin":"Free Shapes Coloring Pages (Printable!)"}];
+var STYLES=[
+  {a:'#ff9a6c',b:'#ff5e8a',ink:'#3a1030',chip:'#ffffff'},   // Sunburst
+  {a:'#7cc7ff',b:'#7c5cff',ink:'#0e1745',chip:'#ffffff'},   // Sky
+  {a:'#7ff0c8',b:'#22c1a4',ink:'#063a30',chip:'#ffffff'},   // Mint
+];
+var style=0;
+function setStyle(s){style=s;document.querySelectorAll('#styleseg .opt').forEach(function(o){o.classList.toggle('active',+o.dataset.s===s)});renderAll();}
+
+var W=1000,H=1500;
+function drawPin(cv,t){
+  var x=cv.getContext('2d');var S=STYLES[style];
+  var g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,S.a);g.addColorStop(1,S.b);
+  x.fillStyle=g;x.fillRect(0,0,W,H);
+  // soft blobs
+  x.globalAlpha=.12;x.fillStyle='#fff';circle(x,180,240,150);circle(x,860,1300,190);x.globalAlpha=1;
+  // white card
+  round(x,80,300,W-160,H-560,44);x.fillStyle='#fff';x.fill();
+  // emoji
+  x.textAlign='center';x.font='300px "Segoe UI Emoji",system-ui';x.fillText(t.emoji,W/2,640);
+  // "FREE PRINTABLE" chip
+  x.font='bold 34px "Segoe UI",Arial';var label='FREE PRINTABLE';var tw=x.measureText(label).width;
+  round(x,W/2-tw/2-26,720,tw+52,64,32);x.fillStyle=S.b;x.fill();
+  x.fillStyle='#fff';x.fillText(label,W/2,763);
+  // title
+  x.fillStyle=S.ink;x.font='bold 76px "Segoe UI",Arial';
+  wrap(x,(t.name+' Coloring Pages').toUpperCase(),W/2,880,W-220,84);
+  // subline
+  x.fillStyle='#6a6072';x.font='36px "Segoe UI",Arial';x.fillText('Make one in seconds — no sign-up',W/2,1120);
+  // top ribbon text
+  x.fillStyle='#fff';x.font='bold 40px "Segoe UI",Arial';x.fillText('✏️ Kids Activity',W/2,180);
+  x.font='28px "Segoe UI",Arial';x.globalAlpha=.9;x.fillText('printaboo.com',W/2,250);x.globalAlpha=1;
+  // bottom brand bar
+  x.fillStyle='rgba(255,255,255,.16)';x.fillRect(0,H-140,W,140);
+  x.fillStyle='#fff';x.font='bold 46px "Segoe UI",Arial';x.fillText('🖍️ Printaboo',W/2,H-70);
+}
+function circle(x,cx,cy,r){x.beginPath();x.arc(cx,cy,r,0,7);x.fill();}
+function round(x,rx,ry,rw,rh,r){x.beginPath();x.moveTo(rx+r,ry);x.arcTo(rx+rw,ry,rx+rw,ry+rh,r);x.arcTo(rx+rw,ry+rh,rx,ry+rh,r);x.arcTo(rx,ry+rh,rx,ry,r);x.arcTo(rx,ry,rx+rw,ry,r);x.closePath();}
+function wrap(x,text,cx,cy,maxW,lh){var words=text.split(' '),line='',lines=[];for(var i=0;i<words.length;i++){var test=line+words[i]+' ';if(x.measureText(test).width>maxW&&line){lines.push(line.trim());line=words[i]+' ';}else line=test;}lines.push(line.trim());var y=cy-(lines.length-1)*lh/2;lines.forEach(function(l){x.fillText(l,cx,y);y+=lh;});}
+
+function renderAll(){
+  var grid=document.getElementById('grid');grid.innerHTML='';
+  THEMES.forEach(function(t,i){
+    var card=document.createElement('div');card.className='pincard';
+    var cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.id='cv'+i;
+    drawPin(cv,t);
+    var bar=document.createElement('div');bar.className='bar';
+    bar.innerHTML='<span>'+t.name+'</span><a onclick="dl('+i+')">Download</a>';
+    card.appendChild(cv);card.appendChild(bar);grid.appendChild(card);
+  });
+}
+function dl(i){var cv=document.getElementById('cv'+i);var a=document.createElement('a');a.download='printaboo-pin-'+THEMES[i].slug+'.png';a.href=cv.toDataURL('image/png');a.click();}
+function downloadAll(){var i=0;(function next(){if(i>=THEMES.length)return;dl(i);i++;setTimeout(next,350);})();}
+renderAll();
+</script>
+</body></html>
