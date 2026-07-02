@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#ff7a59" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Printaboo" />
+<title>Printaboo — Coloring & Activity Pages for Grown-Ups</title>
+<style>
+  :root{--bg:#fff7ef;--card:#fff;--ink:#2b2038;--muted:#8a7f96;--brand:#ff7a59;--brand2:#7c5cff;--accent:#22c1a4;--line:#ece3f2;--good:#1f9d63;--warn:#e0a100;--shadow:0 10px 30px rgba(80,50,120,.10);--radius:18px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#ffe9de,transparent 60%),radial-gradient(1000px 500px at -10% 10%,#efe7ff,transparent 55%),var(--bg);color:var(--ink);min-height:100vh}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;max-width:1180px;margin:0 auto;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:-.4px}
+  .logo .dot{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:var(--shadow)}
+  .badge{font-size:10px;font-weight:800;color:#fff;background:var(--brand2);padding:3px 7px;border-radius:999px;margin-left:6px;vertical-align:middle}
+  .toprt{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .pill{font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--line);padding:7px 11px;border-radius:999px;font-weight:600}
+  .installbtn{display:none;font-size:12.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));border:0;padding:8px 12px;border-radius:999px;cursor:pointer}
+  .wrap{max-width:1180px;margin:0 auto;padding:6px 20px 60px}
+  .toolbar{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 12px}
+  .tool{white-space:nowrap;padding:10px 15px;border-radius:12px;font-weight:800;font-size:13.5px;cursor:pointer;color:var(--muted);background:#fff;border:1px solid var(--line)}
+  .tool.active{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));border-color:transparent;box-shadow:0 6px 16px rgba(124,92,255,.25)}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+  @media(max-width:920px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+  .card h3{margin:2px 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .hint{color:var(--muted);font-size:13px;margin:-4px 0 12px}
+  .subtabs{display:flex;gap:8px;margin-bottom:12px;background:#f4eefb;padding:5px;border-radius:12px}
+  .subtab{flex:1;text-align:center;padding:9px;border-radius:9px;font-weight:700;font-size:13px;cursor:pointer;color:var(--muted)}
+  .subtab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(80,50,120,.10)}
+  .drop{border:2px dashed #d9cceb;border-radius:14px;padding:20px;text-align:center;cursor:pointer;background:#fbf8ff}
+  .drop:hover{border-color:var(--brand2)}
+  .drop .big{font-size:32px}
+  .drop small{color:var(--muted)}
+  input[type=file]{display:none}
+  .field{margin:10px 0}
+  .field label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}
+  .field input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:14px;background:#fbf8ff}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .chip{font-size:12px;padding:6px 11px;border-radius:999px;background:#f2ecfb;color:#5b4a7a;cursor:pointer;font-weight:600;border:1px solid transparent}
+  .chip:hover{border-color:var(--brand2)}
+  .row{display:flex;align-items:center;gap:12px}
+  .mini{font-size:11.5px;color:var(--muted)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg .opt{padding:8px 12px;border:1px solid var(--line);border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;background:#fbf8ff;color:#5b4a7a}
+  .seg .opt.active{background:var(--brand2);color:#fff;border-color:transparent}
+  .btn{border:0;border-radius:12px;padding:13px 16px;font-weight:800;font-size:14.5px;cursor:pointer;transition:.15s;width:100%}
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;box-shadow:0 8px 20px rgba(124,92,255,.28)}
+  .btn.primary:hover{transform:translateY(-1px)}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btnrow{display:flex;gap:10px;margin-top:12px}
+  .canvaswrap{position:relative;background:linear-gradient(45deg,#f4f0fa 25%,transparent 25%,transparent 75%,#f4f0fa 75%),linear-gradient(45deg,#f4f0fa 25%,#fff 25%,#fff 75%,#f4f0fa 75%);background-size:20px 20px;background-position:0 0,10px 10px;border-radius:14px;min-height:340px;display:grid;place-items:center;overflow:hidden;border:1px solid var(--line);margin-top:14px}
+  canvas{max-width:100%;max-height:540px;display:block;border-radius:8px;background:#fff}
+  .placeholder{color:var(--muted);text-align:center;padding:30px}
+  .placeholder .emoji{font-size:46px}
+  .locked{position:absolute;inset:0;background:rgba(255,255,255,.72);backdrop-filter:blur(3px);display:grid;place-items:center;text-align:center;padding:18px}
+  .lockbox{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;max-width:300px;box-shadow:var(--shadow)}
+  .lockbox h4{margin:8px 0 4px}.lockbox p{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .watermark{position:absolute;bottom:10px;right:12px;font-size:11px;color:#b9aecb;font-weight:700}
+  .stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+  .stat:last-child{border-bottom:0}.stat .k{color:var(--muted);font-size:13px}.stat .v{font-weight:800;font-size:16px}
+  .rev{font-size:26px;font-weight:900;color:var(--good)}
+  .note{font-size:12px;color:var(--muted);background:#fbf8ff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:12px}
+  .overlay{position:fixed;inset:0;background:rgba(30,18,50,.62);display:none;place-items:center;z-index:50;padding:18px}
+  .overlay.show{display:grid}
+  .admodal{width:min(430px,94vw);background:#0f0a1e;color:#fff;border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .adhead{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:12px;color:#c9c0e6;background:#171130}
+  .adbody{height:220px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#3a2a6a,#140d2b);text-align:center}
+  .brandcard{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:20px 24px}
+  .brandcard .b{font-size:26px;font-weight:900}.brandcard .s{font-size:13px;color:#cbb;opacity:.85}
+  .adfoot{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;background:#171130}
+  .count{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:3px solid var(--accent);color:var(--accent)}
+  .skip{font-size:12px;color:#8f86ad}
+  .rewardbtn{background:var(--accent);color:#04241f;border:0;border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer;font-size:13px}
+  .rewardbtn:disabled{opacity:.4;cursor:not-allowed}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;opacity:0;transition:.25s;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .foot{max-width:1180px;margin:10px auto 0;padding:16px 20px;color:var(--muted);font-size:12px;text-align:center}
+  .gate{position:fixed;inset:0;background:linear-gradient(135deg,#ff7a59,#7c5cff);display:grid;place-items:center;z-index:80;padding:20px}
+  .gatebox{background:#fff;border-radius:22px;padding:28px;max-width:380px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+  .gatebox .big{font-size:44px}.gatebox h2{margin:8px 0 6px}.gatebox p{color:var(--muted);font-size:13.5px}
+</style>
+</head>
+<body>
+
+<!-- Age / adult gate (COPPA-safe: this is a tool for grown-ups) -->
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="big">🖍️</div>
+    <h2>Printaboo is for grown-ups</h2>
+    <p>A tool for <strong>parents &amp; teachers</strong> to make coloring and activity pages for the kids in their life. Please confirm you're an adult. Photos are processed on your device and never uploaded.</p>
+    <button class="btn primary" style="margin-top:14px" onclick="passGate()">I'm a grown-up — let's go</button>
+    <div class="mini" style="margin-top:10px">This keeps us compliant and your data private.</div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="logo"><span class="dot">🖍️</span> Printaboo <span class="badge">PROTOTYPE</span></div>
+  <div class="toprt">
+    <button class="installbtn" id="installBtn" onclick="doInstall()">⤓ Install app</button>
+    <span class="pill">Free · powered by rewarded ads</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="toolbar" id="toolbar">
+    <div class="tool active" data-tool="color" onclick="setTool('color')">🎨 Coloring</div>
+    <div class="tool" data-tool="maze" onclick="setTool('maze')">🌀 Maze</div>
+    <div class="tool" data-tool="dot" onclick="setTool('dot')">🔢 Dot-to-Dot</div>
+    <div class="tool" data-tool="trace" onclick="setTool('trace')">✍️ Tracing</div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div class="card">
+      <!-- COLORING -->
+      <div class="toolpanel" id="p_color">
+        <h3>🎨 Coloring page</h3>
+        <div class="subtabs">
+          <div class="subtab active" data-cm="photo" onclick="setColorMode('photo')">📷 From a photo</div>
+          <div class="subtab" data-cm="idea" onclick="setColorMode('idea')">💡 From an idea</div>
+        </div>
+        <div id="cm_photo">
+          <label for="file" class="drop"><div class="big">🖼️</div><div><strong>Tap to upload a photo</strong></div><small>Pet, kid, landscape — processed on-device, never uploaded.</small></label>
+          <input type="file" id="file" accept="image/*" />
+          <div class="field" style="margin-top:12px"><label>Line detail — <span id="detailVal">balanced</span></label>
+            <div class="row"><span class="mini">Simple</span><input type="range" min="8" max="60" value="26" id="detail" style="width:100%"><span class="mini">Detailed</span></div></div>
+        </div>
+        <div id="cm_idea" style="display:none">
+          <div class="field"><label>Describe your coloring page</label>
+            <input type="text" id="prompt" placeholder="e.g. a friendly dinosaur eating cupcakes" />
+            <div class="chips">
+              <span class="chip" onclick="setPrompt('a happy dinosaur')">🦕 Dinosaur</span>
+              <span class="chip" onclick="setPrompt('a magical unicorn')">🦄 Unicorn</span>
+              <span class="chip" onclick="setPrompt('a rocket in space')">🚀 Rocket</span>
+              <span class="chip" onclick="setPrompt('a cute cat')">🐱 Cat</span>
+              <span class="chip" onclick="setPrompt('a flower garden')">🌸 Flowers</span></div></div>
+          <div class="note" id="apiNote">💡 <strong>Idea mode</strong>: if an image model is configured (see <span class="mini">CONFIG</span> in the code), this calls it live. Otherwise it shows a bundled sample so you can feel the flow with no API key.</div>
+        </div>
+      </div>
+
+      <!-- MAZE -->
+      <div class="toolpanel" id="p_maze" style="display:none">
+        <h3>🌀 Printable maze</h3>
+        <div class="hint">A real, always-solvable maze — generated fresh every time.</div>
+        <div class="field"><label>Difficulty</label>
+          <div class="seg" id="mazeSeg">
+            <div class="opt active" data-v="10" onclick="pick('mazeSeg',this);mazeSize=10">Easy</div>
+            <div class="opt" data-v="16" onclick="pick('mazeSeg',this);mazeSize=16">Medium</div>
+            <div class="opt" data-v="24" onclick="pick('mazeSeg',this);mazeSize=24">Hard</div>
+            <div class="opt" data-v="34" onclick="pick('mazeSeg',this);mazeSize=34">Expert</div>
+          </div></div>
+        <div class="note">Great for restaurants and road trips. Each tap makes a brand-new maze.</div>
+      </div>
+
+      <!-- DOT TO DOT -->
+      <div class="toolpanel" id="p_dot" style="display:none">
+        <h3>🔢 Dot-to-dot</h3>
+        <div class="hint">Connect the numbers to reveal a hidden picture.</div>
+        <div class="field"><label>Shape</label>
+          <div class="seg" id="dotSeg">
+            <div class="opt active" data-v="heart" onclick="pick('dotSeg',this);dotShape='heart'">❤️ Heart</div>
+            <div class="opt" data-v="star" onclick="pick('dotSeg',this);dotShape='star'">⭐ Star</div>
+            <div class="opt" data-v="flower" onclick="pick('dotSeg',this);dotShape='flower'">🌸 Flower</div>
+            <div class="opt" data-v="fish" onclick="pick('dotSeg',this);dotShape='fish'">🐟 Fish</div>
+          </div></div>
+        <div class="field"><label>Number of dots — <span id="dotVal">20</span> (higher = older kids)</label>
+          <input type="range" min="10" max="40" value="20" id="dotCount" style="width:100%"></div>
+      </div>
+
+      <!-- TRACING -->
+      <div class="toolpanel" id="p_trace" style="display:none">
+        <h3>✍️ Tracing sheet</h3>
+        <div class="hint">Handwriting practice — trace the dotted letters on ruled guide lines.</div>
+        <div class="field"><label>Word or letters to trace</label>
+          <input type="text" id="traceText" value="CAT" maxlength="12" oninput="this.value=this.value.toUpperCase()"/>
+          <div class="chips">
+            <span class="chip" onclick="setTrace('ABC')">ABC</span>
+            <span class="chip" onclick="setTrace('123')">123</span>
+            <span class="chip" onclick="setTrace('CAT')">CAT</span>
+            <span class="chip" onclick="setTrace('LOVE')">LOVE</span>
+            <span class="chip" onclick="setTrace('Emma')">Name</span></div></div>
+        <div class="field"><label>Style</label>
+          <div class="seg" id="traceSeg">
+            <div class="opt active" data-v="dotted" onclick="pick('traceSeg',this);traceStyle='dotted'">Dotted</div>
+            <div class="opt" data-v="outline" onclick="pick('traceSeg',this);traceStyle='outline'">Outline</div>
+          </div></div>
+      </div>
+
+      <button class="btn primary" id="genBtn" style="margin-top:14px" onclick="generate()">✨ Create my page</button>
+
+      <div class="canvaswrap">
+        <div class="placeholder" id="ph"><div class="emoji">🖨️</div><div>Your printable appears here</div></div>
+        <canvas id="canvas" style="display:none"></canvas>
+        <div class="locked" id="lock" style="display:none">
+          <div class="lockbox"><div style="font-size:30px">🔒</div><h4>Your page is ready!</h4>
+            <p>Watch a 15-second ad to unlock print &amp; watermark-free download — free.</p>
+            <button class="btn primary" onclick="openAd()">▶ Watch ad &amp; unlock</button>
+            <div class="mini" style="margin-top:10px">or <a href="#" onclick="event.preventDefault();openAd(true)">go ad-free for $2.99/mo</a></div></div>
+        </div>
+        <div class="watermark" id="wm" style="display:none">PRINTABOO • sample</div>
+      </div>
+      <div class="btnrow">
+        <button class="btn ghost" id="printBtn" disabled onclick="printPage()">🖨️ Print</button>
+        <button class="btn ghost" id="dlBtn" disabled onclick="download()">⬇️ Download PNG</button>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card">
+      <h3>📈 Creator earnings <span class="badge" style="background:var(--good)">LIVE MODEL</span></h3>
+      <div class="rev" id="revenue">$0.0000</div>
+      <div class="mini" id="revsub">Estimated ad revenue this session</div>
+      <div style="margin-top:14px">
+        <div class="stat"><span class="k">Pages created</span><span class="v" id="pages">0</span></div>
+        <div class="stat"><span class="k">Rewarded ads watched</span><span class="v" id="ads">0</span></div>
+        <div class="stat"><span class="k">Ad completion rate</span><span class="v" id="ccr">—</span></div>
+        <div class="stat"><span class="k">Assumed eCPM</span><span class="v">$18.00</span></div>
+      </div>
+      <div class="note"><strong>Four tools, one loop:</strong> coloring, mazes, dot-to-dot and tracing all share the same rewarded-ad unlock. More tools → more pages per visit → more paid ad views. That's the whole engine.</div>
+      <div class="note" style="border-color:#ffe0b8;background:#fff8ee"><strong>COPPA-safe by design:</strong> adult gate, on-device photo processing, no child data. This keeps ad monetization legal — the detail most kids-app clones get wrong.</div>
+      <h3 style="margin-top:16px">🧪 Try each tool</h3>
+      <div class="mini">Switch tools up top. Everything (maze, dot-to-dot, tracing) is really generated — hit Create, then watch the mock ad and see earnings rise.</div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Interactive prototype. Coloring (photo), mazes, dot-to-dot and tracing are fully functional and run in your browser. Ad + earnings figures simulate the live business model (eCPM $18 ≈ 2026 US rewarded-video rates). “From an idea” uses a bundled sample unless an image model is configured in code.</div>
+
+<div class="overlay" id="overlay">
+  <div class="admodal">
+    <div class="adhead"><span>Sponsored · rewarded video</span><span>via AppLovin MAX</span></div>
+    <div class="adbody"><div class="brandcard"><div class="b" id="adbrand">Chewy</div><div class="s" id="adcopy">Everything your pet loves — delivered.</div></div></div>
+    <div class="adfoot"><div class="count" id="count">15</div><span class="skip" id="skiptxt">Reward in 15s…</span><button class="rewardbtn" id="claim" disabled onclick="claimReward()">Claim reward ✓</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   CONFIG — plug a real image model in here to enable "from an idea".
+   Leave blank to use bundled samples (no key needed).
+   Expected: POST {prompt} -> returns { image: "<dataURL or https url>" }
+   Works with a thin proxy in front of Replicate / Stability / OpenAI Images, etc.
+========================================================= */
+var CONFIG = { imageApiUrl: "", imageApiKey: "" };
+
+// ---------- state ----------
+var tool='color', colorMode='photo';
+var hasImage=false, unlocked=false, premium=false;
+var pages=0, ads=0, adStarts=0, eCPM=18.00;
+var mazeSize=10, dotShape='heart', traceStyle='dotted';
+var img=new Image();
+var canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d',{willReadFrequently:true});
+
+// ---------- gate + PWA ----------
+function passGate(){document.getElementById('gate').style.display='none';}
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='inline-block';});
+function doInstall(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;document.getElementById('installBtn').style.display='none';}}
+// inline web-app manifest (installable)
+(function(){var m={name:"Printaboo — Coloring & Activity Pages",short_name:"Printaboo",start_url:".",display:"standalone",background_color:"#fff7ef",theme_color:"#ff7a59",icons:[]};
+  var l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l);})();
+
+// ---------- helpers ----------
+function toast(m){var t=document.getElementById('toast');t.innerHTML=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show')},2000);}
+function pick(seg,el){document.querySelectorAll('#'+seg+' .opt').forEach(function(o){o.classList.remove('active')});el.classList.add('active');}
+function setPrompt(p){document.getElementById('prompt').value=p;}
+function setTrace(t){document.getElementById('traceText').value=t.toUpperCase();}
+function setLocked(v){document.getElementById('lock').style.display=v?'grid':'none';}
+function setTool(t){tool=t;document.querySelectorAll('.tool').forEach(function(x){x.classList.toggle('active',x.dataset.tool===t)});
+  ['color','maze','dot','trace'].forEach(function(k){document.getElementById('p_'+k).style.display=k===t?'block':'none';});
+  resetCanvas();}
+function setColorMode(m){colorMode=m;document.querySelectorAll('#p_color .subtab').forEach(function(s){s.classList.toggle('active',s.dataset.cm===m)});
+  document.getElementById('cm_photo').style.display=m==='photo'?'block':'none';
+  document.getElementById('cm_idea').style.display=m==='idea'?'block':'none';}
+function resetCanvas(){document.getElementById('canvas').style.display='none';document.getElementById('ph').style.display='block';
+  document.getElementById('ph').innerHTML='<div class="emoji">🖨️</div><div>Your printable appears here</div>';setLocked(false);document.getElementById('wm').style.display='none';disableExports();unlocked=false;}
+document.getElementById('detail').addEventListener('input',function(e){var v=+e.target.value,l='balanced';if(v<18)l='simple (toddler)';else if(v>40)l='detailed';document.getElementById('detailVal').textContent=l;if(hasImage&&tool==='color'&&colorMode==='photo')renderPhoto();});
+document.getElementById('dotCount').addEventListener('input',function(e){document.getElementById('dotVal').textContent=e.target.value;});
+document.getElementById('file').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){img.onload=function(){hasImage=true;toast('Photo loaded ✓ now hit Create');};img.src=ev.target.result;};r.readAsDataURL(f);});
+
+// ---------- generate dispatch ----------
+function generate(){
+  if(tool==='color'){
+    if(colorMode==='photo'){ if(!hasImage){toast('Upload a photo first 📷');return;} busy();setTimeout(function(){renderPhoto();afterGen();},600); }
+    else { var p=document.getElementById('prompt').value||'a happy dinosaur'; busy(); ideaGenerate(p); }
+  } else if(tool==='maze'){ busy();setTimeout(function(){renderMaze();afterGen();},400); }
+  else if(tool==='dot'){ busy();setTimeout(function(){renderDot();afterGen();},400); }
+  else if(tool==='trace'){ busy();setTimeout(function(){renderTrace();afterGen();},400); }
+}
+function busy(){var b=document.getElementById('genBtn');b.textContent='✏️ Drawing…';b.disabled=true;
+  document.getElementById('ph').style.display='block';document.getElementById('ph').innerHTML='<div class="emoji">✏️</div><div>Making your page…</div>';document.getElementById('canvas').style.display='none';}
+function afterGen(){var b=document.getElementById('genBtn');b.textContent='✨ Create my page';b.disabled=false;
+  document.getElementById('ph').style.display='none';document.getElementById('canvas').style.display='block';
+  document.getElementById('wm').style.display=premium?'none':'block';
+  pages++;document.getElementById('pages').textContent=pages;
+  if(premium){unlocked=true;setLocked(false);enableExports();document.getElementById('wm').style.display='none';}
+  else{unlocked=false;setLocked(true);disableExports();}}
+
+// ---------- COLORING: photo (real edge detection) ----------
+function renderPhoto(){
+  var maxW=900,scale=Math.min(1,maxW/img.width),w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+  canvas.width=w;canvas.height=h;ctx.drawImage(img,0,0,w,h);
+  var d=ctx.getImageData(0,0,w,h).data,g=new Float32Array(w*h);
+  for(var i=0;i<w*h;i++)g[i]=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];
+  var b=new Float32Array(w*h);
+  for(var y=0;y<h;y++)for(var x=0;x<w;x++){var s=0,n=0;for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){var xx=x+dx,yy=y+dy;if(xx>=0&&yy>=0&&xx<w&&yy<h){s+=g[yy*w+xx];n++;}}b[y*w+x]=s/n;}
+  var out=ctx.createImageData(w,h),o=out.data,thr=+document.getElementById('detail').value;
+  for(var y2=0;y2<h;y2++)for(var x2=0;x2<w;x2++){var idx=y2*w+x2;
+    if(x2===0||y2===0||x2===w-1||y2===h-1){pnt(o,idx,255);continue;}
+    var gx=-b[(y2-1)*w+(x2-1)]-2*b[y2*w+(x2-1)]-b[(y2+1)*w+(x2-1)]+b[(y2-1)*w+(x2+1)]+2*b[y2*w+(x2+1)]+b[(y2+1)*w+(x2+1)];
+    var gy=-b[(y2-1)*w+(x2-1)]-2*b[(y2-1)*w+x2]-b[(y2-1)*w+(x2+1)]+b[(y2+1)*w+(x2-1)]+2*b[(y2+1)*w+x2]+b[(y2+1)*w+(x2+1)];
+    pnt(o,idx,Math.sqrt(gx*gx+gy*gy)>thr?15:255);}
+  ctx.putImageData(out,0,0);
+}
+function pnt(o,idx,v){o[idx*4]=v;o[idx*4+1]=v;o[idx*4+2]=v;o[idx*4+3]=255;}
+
+// ---------- COLORING: idea (API hook + sample fallback) ----------
+function ideaGenerate(p){
+  if(CONFIG.imageApiUrl){
+    fetch(CONFIG.imageApiUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+CONFIG.imageApiKey},body:JSON.stringify({prompt:'black and white coloring book line art, thick clean outlines, no shading: '+p})})
+      .then(function(r){return r.json();})
+      .then(function(j){var im=new Image();im.crossOrigin='anonymous';im.onload=function(){canvas.width=im.width;canvas.height=im.height;ctx.fillStyle='#fff';ctx.fillRect(0,0,im.width,im.height);ctx.drawImage(im,0,0);afterGen();};im.src=j.image;})
+      .catch(function(){toast('Model call failed — showing sample');renderSample(p);afterGen();});
+  } else { setTimeout(function(){renderSample(p);afterGen();},500); }
+}
+var SAMPLES={
+  dino:'<path d="M60 250 Q60 150 150 140 Q160 80 220 90 Q250 60 280 95 Q300 90 300 120 Q330 130 320 160 L300 165 Q305 210 260 230 L265 275 L235 275 L230 235 Q190 245 160 235 L155 280 L125 280 L125 235 Q80 235 60 250 Z"/><circle cx="275" cy="120" r="7"/><path d="M150 150 q10 -20 30 -15"/>',
+  unicorn:'<path d="M120 260 Q110 170 180 160 L200 90 L215 155 Q290 150 300 210 Q320 215 315 240 L295 245 Q300 270 275 275 L120 275 Z"/><path d="M205 155 L215 95 L225 155"/><circle cx="255" cy="185" r="6"/><path d="M175 165 q20 20 55 8"/>',
+  rocket:'<path d="M200 60 Q245 120 240 210 L160 210 Q155 120 200 60 Z"/><circle cx="200" cy="140" r="20"/><path d="M160 200 L120 245 L165 235 Z"/><path d="M240 200 L280 245 L235 235 Z"/><path d="M180 240 q20 40 40 0"/>',
+  cat:'<circle cx="200" cy="185" r="80"/><path d="M140 130 L150 80 L185 120"/><path d="M260 130 L250 80 L215 120"/><circle cx="175" cy="180" r="7"/><circle cx="225" cy="180" r="7"/><path d="M195 205 q5 8 10 0"/><path d="M150 200 L110 190 M150 210 L112 215"/><path d="M250 200 L290 190 M250 210 L288 215"/>',
+  flower:'<circle cx="200" cy="160" r="28"/><circle cx="200" cy="108" r="26"/><circle cx="200" cy="212" r="26"/><circle cx="148" cy="160" r="26"/><circle cx="252" cy="160" r="26"/><path d="M200 188 L200 285"/><path d="M200 250 Q160 240 150 210"/><path d="M200 235 Q245 225 255 200"/>'};
+function pickSample(p){p=p.toLowerCase();if(/dino|rex|raptor/.test(p))return SAMPLES.dino;if(/unicorn|pony|horse|magic/.test(p))return SAMPLES.unicorn;if(/rocket|space|ship|moon/.test(p))return SAMPLES.rocket;if(/cat|kitt|dog|pet|animal/.test(p))return SAMPLES.cat;return SAMPLES.flower;}
+function renderSample(p){var w=760,h=560;canvas.width=w;canvas.height=h;ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 400 340"><g stroke="#111" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" fill="none">'+pickSample(p)+'</g></svg>';
+  var im=new Image();im.onload=function(){ctx.drawImage(im,0,0,w,h);ctx.fillStyle='#bbb';ctx.font='14px Segoe UI';ctx.fillText('“'+p+'”',20,h-20);};im.src='data:image/svg+xml;base64,'+btoa(svg);}
+
+// ---------- MAZE (recursive backtracker — real) ----------
+function renderMaze(){
+  var n=mazeSize, cell=Math.max(14,Math.floor(760/n)), pad=20, W=n*cell+pad*2;
+  canvas.width=W;canvas.height=W;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,W);
+  var walls=[];for(var i=0;i<n*n;i++)walls.push({t:true,r:true,b:true,l:true,v:false});
+  var stack=[0];walls[0].v=true;
+  function nb(c){var r=Math.floor(c/n),col=c%n,a=[];if(r>0&&!walls[c-n].v)a.push([c-n,'t']);if(col<n-1&&!walls[c+1].v)a.push([c+1,'r']);if(r<n-1&&!walls[c+n].v)a.push([c+n,'b']);if(col>0&&!walls[c-1].v)a.push([c-1,'l']);return a;}
+  while(stack.length){var c=stack[stack.length-1],ns=nb(c);if(ns.length){var ch=ns[Math.floor(Math.random()*ns.length)],nc=ch[0],dir=ch[1];
+    if(dir==='t'){walls[c].t=false;walls[nc].b=false;}if(dir==='r'){walls[c].r=false;walls[nc].l=false;}if(dir==='b'){walls[c].b=false;walls[nc].t=false;}if(dir==='l'){walls[c].l=false;walls[nc].r=false;}
+    walls[nc].v=true;stack.push(nc);}else stack.pop();}
+  walls[0].l=false; walls[n*n-1].r=false; // entrance & exit
+  ctx.strokeStyle='#111';ctx.lineWidth=Math.max(2,cell/7);ctx.lineCap='round';
+  for(var idx=0;idx<n*n;idx++){var r2=Math.floor(idx/n),c2=idx%n,x=pad+c2*cell,y=pad+r2*cell;ctx.beginPath();
+    if(walls[idx].t){ctx.moveTo(x,y);ctx.lineTo(x+cell,y);}if(walls[idx].r){ctx.moveTo(x+cell,y);ctx.lineTo(x+cell,y+cell);}
+    if(walls[idx].b){ctx.moveTo(x+cell,y+cell);ctx.lineTo(x,y+cell);}if(walls[idx].l){ctx.moveTo(x,y+cell);ctx.lineTo(x,y);}ctx.stroke();}
+  ctx.fillStyle='#22c1a4';ctx.font='bold '+Math.max(12,cell*0.6)+'px Segoe UI';ctx.fillText('S',pad-14,pad+cell*0.72);
+  ctx.fillStyle='#ff7a59';ctx.fillText('F',W-pad+2,W-pad-cell*0.25);
+}
+
+// ---------- DOT-TO-DOT (parametric shapes — real) ----------
+function shapePts(shape,N){var p=[];var i,t;
+  if(shape==='heart'){for(i=0;i<N;i++){t=Math.PI/2 - i/N*2*Math.PI;var x=16*Math.pow(Math.sin(t),3);var y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);p.push([x,-y]);}}
+  else if(shape==='star'){for(i=0;i<N;i++){t=-Math.PI/2 + i/N*2*Math.PI;var spikes=5;var rr=(i%2===0)?1:0.45;/*approx*/ }
+    // even distribution around a 5-point star outline
+    var verts=[];for(i=0;i<10;i++){var ang=-Math.PI/2+i*Math.PI/5;var rad=(i%2===0)?1:0.42;verts.push([Math.cos(ang)*rad,Math.sin(ang)*rad]);}
+    p=densify(verts,N);}
+  else if(shape==='flower'){for(i=0;i<N;i++){t=i/N*2*Math.PI;var r=Math.cos(4*t)*0.6+0.7;p.push([Math.cos(t)*r,Math.sin(t)*r]);}}
+  else if(shape==='fish'){var fv=[[-1,0],[-0.4,-0.5],[0.4,-0.45],[0.9,-0.15],[1.35,-0.55],[1.35,0.55],[0.9,0.15],[0.4,0.45],[-0.4,0.5]];p=densify(fv,N);}
+  return p;
+}
+function densify(verts,N){var out=[],total=verts.length,seg=N/total;for(var s=0;s<total;s++){var a=verts[s],b=verts[(s+1)%total];var k=Math.max(1,Math.round(seg));for(var j=0;j<k;j++){var f=j/k;out.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]);}}return out.slice(0,N);}
+function renderDot(){
+  var W=740,H=560;canvas.width=W;canvas.height=H;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var N=+document.getElementById('dotCount').value;var pts=shapePts(dotShape,N);
+  var minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;pts.forEach(function(q){minX=Math.min(minX,q[0]);maxX=Math.max(maxX,q[0]);minY=Math.min(minY,q[1]);maxY=Math.max(maxY,q[1]);});
+  var sc=Math.min((W-140)/(maxX-minX),(H-140)/(maxY-minY)),ox=W/2-(minX+maxX)/2*sc,oy=H/2-(minY+maxY)/2*sc;
+  ctx.fillStyle='#111';ctx.font='bold 15px Segoe UI';ctx.textAlign='center';
+  pts.forEach(function(q,i){var x=q[0]*sc+ox,y=q[1]*sc+oy;ctx.beginPath();ctx.arc(x,y,3.2,0,7);ctx.fill();
+    var lx=x,ly=y-9;ctx.fillText((i+1),lx,ly);});
+  ctx.textAlign='left';ctx.fillStyle='#bbb';ctx.font='14px Segoe UI';ctx.fillText('Connect the dots 1 → '+N+'  ·  Printaboo',20,H-16);
+}
+
+// ---------- TRACING (real) ----------
+function renderTrace(){
+  var W=820,H=600;canvas.width=W;canvas.height=H;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var text=(document.getElementById('traceText').value||'CAT');
+  var rows=4,rowH=(H-60)/rows;
+  for(var r=0;r<rows;r++){
+    var yTop=40+r*rowH, yMid=yTop+rowH*0.5, yBase=yTop+rowH*0.8;
+    // guide lines
+    ctx.strokeStyle='#cfc3e0';ctx.lineWidth=1.5;ctx.setLineDash([]);
+    line(30,yTop,W-30,yTop);line(30,yBase,W-30,yBase);
+    ctx.strokeStyle='#e3d9f0';ctx.setLineDash([6,6]);line(30,yMid,W-30,yMid);ctx.setLineDash([]);
+    // letters
+    var size=rowH*0.72;ctx.font='bold '+size+'px Georgia,serif';ctx.textBaseline='alphabetic';
+    if(traceStyle==='dotted'){ctx.setLineDash([2,7]);ctx.lineWidth=2.4;ctx.strokeStyle='#b7a9cf';}
+    else{ctx.setLineDash([]);ctx.lineWidth=2;ctx.strokeStyle='#c9bce0';}
+    // repeat word across the row
+    var x=40, gap=size*0.15;
+    var guideAlpha=r===0?1:0.55; // first row bold, rest lighter to trace
+    ctx.globalAlpha=guideAlpha;
+    while(x < W-60){
+      for(var c=0;c<text.length;c++){var ch=text[c];var wch=ctx.measureText(ch).width;ctx.strokeText(ch,x,yBase);x+=wch+gap;if(x>W-60)break;}
+      x+=size*0.5;
+    }
+    ctx.globalAlpha=1;ctx.setLineDash([]);
+  }
+  ctx.fillStyle='#bbb';ctx.font='14px Segoe UI';ctx.fillText('Trace the letters  ·  Printaboo',30,H-14);
+}
+function line(a,b,c,d){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke();}
+
+// ---------- rewarded ad ----------
+var timer=null;
+function openAd(buy){
+  if(buy){premium=true;unlocked=true;setLocked(false);enableExports();document.getElementById('wm').style.display='none';toast('Ad-free unlocked ✓ (simulated subscription)');return;}
+  var brands=[['Chewy','Everything your pet loves — delivered.'],['Crayola','New washable marker sets are here.'],['Disney+','Stream the whole family library.'],['Amazon Kids+','Thousands of books &amp; games, one price.']];
+  var b=brands[Math.floor(Math.random()*brands.length)];document.getElementById('adbrand').innerHTML=b[0];document.getElementById('adcopy').innerHTML=b[1];
+  adStarts++;var n=15,c=document.getElementById('count'),s=document.getElementById('skiptxt'),cl=document.getElementById('claim');
+  c.textContent=n;c.style.borderColor='var(--accent)';c.style.color='var(--accent)';s.textContent='Reward in '+n+'s…';cl.disabled=true;
+  document.getElementById('overlay').classList.add('show');
+  timer=setInterval(function(){n--;c.textContent=n;s.textContent=n>0?('Reward in '+n+'s…'):'You earned your reward!';if(n<=0){clearInterval(timer);cl.disabled=false;c.style.borderColor='var(--good)';c.style.color='var(--good)';c.textContent='✓';}},1000);
+}
+function claimReward(){document.getElementById('overlay').classList.remove('show');ads++;unlocked=true;setLocked(false);enableExports();document.getElementById('wm').style.display='none';updateEarnings();toast('Unlocked! 🎉 +$'+(eCPM/1000).toFixed(4)+' ad revenue');}
+function updateEarnings(){var rev=ads*(eCPM/1000);document.getElementById('revenue').textContent='$'+rev.toFixed(4);document.getElementById('ads').textContent=ads;var ccr=adStarts>0?Math.round(ads/adStarts*100):0;document.getElementById('ccr').textContent=ccr+'%';document.getElementById('revsub').textContent='≈ $'+rev.toFixed(4)+' from '+ads+' rewarded view'+(ads===1?'':'s')+' · scales with users';}
+
+// ---------- exports ----------
+function enableExports(){document.getElementById('printBtn').disabled=false;document.getElementById('dlBtn').disabled=false;}
+function disableExports(){document.getElementById('printBtn').disabled=true;document.getElementById('dlBtn').disabled=true;}
+function download(){if(!unlocked){toast('Watch the ad to unlock 🔒');return;}var a=document.createElement('a');a.download='printaboo-'+tool+'.png';a.href=canvas.toDataURL('image/png');a.click();}
+function printPage(){if(!unlocked){toast('Watch the ad to unlock 🔒');return;}var w=window.open('');w.document.write('<img src="'+canvas.toDataURL()+'" style="max-width:100%" onload="print()"/>');}
+</script>
+</body>
+</html>

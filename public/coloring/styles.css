@@ -1,0 +1,23 @@
+:root{--brand:#ff7a59;--brand2:#7c5cff;--ink:#2b2038;--muted:#8a7f96;--line:#ece3f2;--bg:#fff7ef}
+*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;color:var(--ink);
+background:radial-gradient(1200px 600px at 80% -10%,#ffe9de,transparent 60%),radial-gradient(1000px 500px at -10% 10%,#efe7ff,transparent 55%),var(--bg);line-height:1.55}
+.nav{display:flex;justify-content:space-between;align-items:center;max-width:960px;margin:0 auto;padding:16px 20px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;text-decoration:none;color:var(--ink)}
+.logo .dot{width:32px;height:32px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;font-size:18px}
+.cta{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-weight:700;text-decoration:none;color:var(--ink);font-size:14px}
+main{max-width:960px;margin:0 auto;padding:8px 20px 40px}
+.crumbs{font-size:12.5px;color:var(--muted);margin:6px 0 14px}.crumbs a{color:var(--muted)}
+.hero{background:#fff;border:1px solid var(--line);border-radius:22px;padding:34px;text-align:center;box-shadow:0 10px 30px rgba(80,50,120,.08)}
+.hero .emoji{font-size:60px}.hero h1{font-size:32px;margin:6px 0 10px;letter-spacing:-.5px}
+.hero p{color:#5b5266;max-width:640px;margin:0 auto 18px;font-size:16px}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;text-decoration:none;font-weight:800;padding:14px 22px;border-radius:14px;box-shadow:0 10px 22px rgba(124,92,255,.28);font-size:15.5px}
+.mini{color:var(--muted);font-size:12.5px;margin-top:12px}
+section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-top:18px;box-shadow:0 8px 22px rgba(80,50,120,.06)}
+section h2{margin:0 0 12px;font-size:20px}.how ol{margin:0;padding-left:20px}.how li{margin:8px 0}
+.relgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){.relgrid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:26px}}
+.rel{display:flex;align-items:center;gap:8px;background:#fbf8ff;border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px}
+.rel span{font-size:20px}
+.faq details{border-bottom:1px solid var(--line);padding:10px 0}.faq summary{font-weight:700;cursor:pointer}.faq p{color:#5b5266;margin:8px 0 0}
+.cta-band{text-align:center;background:linear-gradient(135deg,#fff3ee,#f3eeff)}
+footer{max-width:960px;margin:0 auto;padding:24px 20px;color:var(--muted);font-size:12.5px;text-align:center}
